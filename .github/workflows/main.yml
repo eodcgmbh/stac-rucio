@@ -1,0 +1,29 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install Nix
+      uses: cachix/install-nix-action@v20
+      with:
+        nix_version: 2.21.0
+
+    - name: Enter Nix Shell and Run Commands
+      run: |
+        nix-shell shell.nix --run "
+          pytest
+        "

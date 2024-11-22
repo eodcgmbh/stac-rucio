@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "stac-rucio"
+version = "2024.11.1"
+description = "A python package for managing STAC asset data locality when those assets are managed by a RUCIO server."
+authors = ["sean <sean.hoyal@external.eodc.eu>"]
+license = "Apache License 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+pystac = ">=1.11.0 "
+pystac-client = ">=0.8.5"
+rucio = ">=35.6.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.2.0"
+ipykernel = "^6.15.1"
+pre-commit = "^2.20.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
