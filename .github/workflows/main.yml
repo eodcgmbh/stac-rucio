@@ -24,4 +24,4 @@ jobs:
 
     - name: Run unit tests
       run: |
-        nix-shell --command "python -m pytest"
+        nix-shell --command "poetry run python3 -m pytest"
