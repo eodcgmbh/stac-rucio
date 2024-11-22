@@ -16,6 +16,7 @@ pkgs.mkShellNoCC {
     # Run any commands you want here
     poetry lock
     poetry install --all-extras
+    poetry run pre-commit install
     echo "Poetry version: $(poetry --version)"
     echo "Git version: $(git --version)"
   '';
