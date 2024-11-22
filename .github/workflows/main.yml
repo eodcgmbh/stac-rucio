@@ -22,6 +22,6 @@ jobs:
       with:
         nix_version: 2.21.0
 
-    - name: Enter Nix Shell and run uni tests
+    - name: Run unit tests
       run: |
         nix-shell --command "python -m pytest"
