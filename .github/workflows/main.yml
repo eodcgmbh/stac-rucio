@@ -22,8 +22,6 @@ jobs:
       with:
         nix_version: 2.21.0
 
-    - name: Enter Nix Shell and Run Commands
+    - name: Enter Nix Shell and run uni tests
       run: |
-        nix-shell shell.nix --run "
-          pytest
-        "
+        nix-shell shell.nix --run "pytest"
