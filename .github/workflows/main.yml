@@ -24,4 +24,4 @@ jobs:
 
     - name: Enter Nix Shell and run uni tests
       run: |
-        nix-shell shell.nix --run "pytest"
+        nix-shell --command pytest
