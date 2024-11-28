@@ -99,6 +99,7 @@ files = [
 [package.dependencies]
 aiohappyeyeballs = ">=2.3.0"
 aiosignal = ">=1.1.2"
+async-timeout = {version = ">=4.0,<6.0", markers = "python_version < \"3.11\""}
 attrs = ">=17.3.0"
 frozenlist = ">=1.1.1"
 multidict = ">=4.5,<7.0"
@@ -307,7 +308,10 @@ files = [
 [package.dependencies]
 jmespath = ">=0.7.1,<2.0.0"
 python-dateutil = ">=2.1,<3.0.0"
-urllib3 = {version = ">=1.25.4,<2.2.0 || >2.2.0,<3", markers = "python_version >= \"3.10\""}
+urllib3 = [
+    {version = ">=1.25.4,<1.27", markers = "python_version < \"3.10\""},
+    {version = ">=1.25.4,<2.2.0 || >2.2.0,<3", markers = "python_version >= \"3.10\""},
+]
 
 [package.extras]
 crt = ["awscrt (==0.21.2)"]
@@ -721,6 +725,21 @@ files = [
 [package.dependencies]
 decorator = ">=4.0.0"
 stevedore = ">=3.0.0"
+typing-extensions = {version = ">=4.0.1", markers = "python_version < \"3.11\""}
+
+[[package]]
+name = "exceptiongroup"
+version = "1.2.2"
+description = "Backport of PEP 654 (exception groups)"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "exceptiongroup-1.2.2-py3-none-any.whl", hash = "sha256:3111b9d131c238bec2f8f516e123e14ba243563fb135d3fe885990585aa7795b"},
+    {file = "exceptiongroup-1.2.2.tar.gz", hash = "sha256:47c2edf7c6738fafb49fd34290706d1a1a2f4d1c6df275526b62cbb4aa5393cc"},
+]
+
+[package.extras]
+test = ["pytest (>=6)"]
 
 [[package]]
 name = "executing"
@@ -766,6 +785,7 @@ files = [
 [package.dependencies]
 blinker = ">=1.6.2"
 click = ">=8.1.3"
+importlib-metadata = {version = ">=3.6.0", markers = "python_version < \"3.10\""}
 itsdangerous = ">=2.1.2"
 Jinja2 = ">=3.1.2"
 Werkzeug = ">=3.0.0"
@@ -1017,13 +1037,13 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "identify"
-version = "2.6.2"
+version = "2.6.3"
 description = "File identification library for Python"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "identify-2.6.2-py2.py3-none-any.whl", hash = "sha256:c097384259f49e372f4ea00a19719d95ae27dd5ff0fd77ad630aa891306b82f3"},
-    {file = "identify-2.6.2.tar.gz", hash = "sha256:fab5c716c24d7a789775228823797296a2994b075fb6080ac83a102772a98cbd"},
+    {file = "identify-2.6.3-py2.py3-none-any.whl", hash = "sha256:9edba65473324c2ea9684b1f944fe3191db3345e50b6d04571d10ed164f8d7bd"},
+    {file = "identify-2.6.3.tar.gz", hash = "sha256:62f5dae9b5fef52c84cc188514e9ea4f3f636b1d8799ab5ebc475471f9e47a02"},
 ]
 
 [package.extras]
@@ -1042,6 +1062,29 @@ files = [
 
 [package.extras]
 all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
+
+[[package]]
+name = "importlib-metadata"
+version = "8.5.0"
+description = "Read metadata from Python packages"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "importlib_metadata-8.5.0-py3-none-any.whl", hash = "sha256:45e54197d28b7a7f1559e60b95e7c567032b602131fbd588f1497f47880aa68b"},
+    {file = "importlib_metadata-8.5.0.tar.gz", hash = "sha256:71522656f0abace1d072b9e5481a48f07c138e00f079c38c8f883823f9c26bd7"},
+]
+
+[package.dependencies]
+zipp = ">=3.20"
+
+[package.extras]
+check = ["pytest-checkdocs (>=2.4)", "pytest-ruff (>=0.2.1)"]
+cover = ["pytest-cov"]
+doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-lint"]
+enabler = ["pytest-enabler (>=2.2)"]
+perf = ["ipython"]
+test = ["flufl.flake8", "importlib-resources (>=1.3)", "jaraco.test (>=5.4)", "packaging", "pyfakefs", "pytest (>=6,!=8.1.*)", "pytest-perf (>=0.9.2)"]
+type = ["pytest-mypy"]
 
 [[package]]
 name = "iniconfig"
@@ -1089,40 +1132,40 @@ test = ["flaky", "ipyparallel", "pre-commit", "pytest (>=7.0)", "pytest-asyncio 
 
 [[package]]
 name = "ipython"
-version = "8.29.0"
+version = "8.18.1"
 description = "IPython: Productive Interactive Computing"
 optional = false
-python-versions = ">=3.10"
+python-versions = ">=3.9"
 files = [
-    {file = "ipython-8.29.0-py3-none-any.whl", hash = "sha256:0188a1bd83267192123ccea7f4a8ed0a78910535dbaa3f37671dca76ebd429c8"},
-    {file = "ipython-8.29.0.tar.gz", hash = "sha256:40b60e15b22591450eef73e40a027cf77bd652e757523eebc5bd7c7c498290eb"},
+    {file = "ipython-8.18.1-py3-none-any.whl", hash = "sha256:e8267419d72d81955ec1177f8a29aaa90ac80ad647499201119e2f05e99aa397"},
+    {file = "ipython-8.18.1.tar.gz", hash = "sha256:ca6f079bb33457c66e233e4580ebfc4128855b4cf6370dddd73842a9563e8a27"},
 ]
 
 [package.dependencies]
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
 decorator = "*"
+exceptiongroup = {version = "*", markers = "python_version < \"3.11\""}
 jedi = ">=0.16"
 matplotlib-inline = "*"
-pexpect = {version = ">4.3", markers = "sys_platform != \"win32\" and sys_platform != \"emscripten\""}
+pexpect = {version = ">4.3", markers = "sys_platform != \"win32\""}
 prompt-toolkit = ">=3.0.41,<3.1.0"
 pygments = ">=2.4.0"
 stack-data = "*"
-traitlets = ">=5.13.0"
-typing-extensions = {version = ">=4.6", markers = "python_version < \"3.12\""}
+traitlets = ">=5"
+typing-extensions = {version = "*", markers = "python_version < \"3.10\""}
 
 [package.extras]
-all = ["ipython[black,doc,kernel,matplotlib,nbconvert,nbformat,notebook,parallel,qtconsole]", "ipython[test,test-extra]"]
+all = ["black", "curio", "docrepr", "exceptiongroup", "ipykernel", "ipyparallel", "ipywidgets", "matplotlib", "matplotlib (!=3.2.0)", "nbconvert", "nbformat", "notebook", "numpy (>=1.22)", "pandas", "pickleshare", "pytest (<7)", "pytest (<7.1)", "pytest-asyncio (<0.22)", "qtconsole", "setuptools (>=18.5)", "sphinx (>=1.3)", "sphinx-rtd-theme", "stack-data", "testpath", "trio", "typing-extensions"]
 black = ["black"]
-doc = ["docrepr", "exceptiongroup", "intersphinx-registry", "ipykernel", "ipython[test]", "matplotlib", "setuptools (>=18.5)", "sphinx (>=1.3)", "sphinx-rtd-theme", "sphinxcontrib-jquery", "tomli", "typing-extensions"]
+doc = ["docrepr", "exceptiongroup", "ipykernel", "matplotlib", "pickleshare", "pytest (<7)", "pytest (<7.1)", "pytest-asyncio (<0.22)", "setuptools (>=18.5)", "sphinx (>=1.3)", "sphinx-rtd-theme", "stack-data", "testpath", "typing-extensions"]
 kernel = ["ipykernel"]
-matplotlib = ["matplotlib"]
 nbconvert = ["nbconvert"]
 nbformat = ["nbformat"]
 notebook = ["ipywidgets", "notebook"]
 parallel = ["ipyparallel"]
 qtconsole = ["qtconsole"]
-test = ["packaging", "pickleshare", "pytest", "pytest-asyncio (<0.22)", "testpath"]
-test-extra = ["curio", "ipython[test]", "matplotlib (!=3.2.0)", "nbformat", "numpy (>=1.23)", "pandas", "trio"]
+test = ["pickleshare", "pytest (<7.1)", "pytest-asyncio (<0.22)", "testpath"]
+test-extra = ["curio", "matplotlib (!=3.2.0)", "nbformat", "numpy (>=1.22)", "pandas", "pickleshare", "pytest (<7.1)", "pytest-asyncio (<0.22)", "testpath", "trio"]
 
 [[package]]
 name = "itsdangerous"
@@ -1229,6 +1272,7 @@ files = [
 ]
 
 [package.dependencies]
+importlib-metadata = {version = ">=4.8.3", markers = "python_version < \"3.10\""}
 jupyter-core = ">=4.12,<5.0.dev0 || >=5.1.dev0"
 python-dateutil = ">=2.8.2"
 pyzmq = ">=23.0"
@@ -1540,6 +1584,9 @@ files = [
     {file = "multidict-6.1.0-py3-none-any.whl", hash = "sha256:48e171e52d1c4d33888e529b999e5900356b9ae588c2f09a52dcefb158b27506"},
     {file = "multidict-6.1.0.tar.gz", hash = "sha256:22ae2ebf9b0c69d206c003e2f6a914ea33f0a932d4aa16f236afc049d9958f4a"},
 ]
+
+[package.dependencies]
+typing-extensions = {version = ">=4.1.0", markers = "python_version < \"3.11\""}
 
 [[package]]
 name = "nest-asyncio"
@@ -1982,13 +2029,13 @@ files = [
 
 [[package]]
 name = "pydantic"
-version = "2.10.1"
+version = "2.10.2"
 description = "Data validation using Python type hints"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pydantic-2.10.1-py3-none-any.whl", hash = "sha256:a8d20db84de64cf4a7d59e899c2caf0fe9d660c7cfc482528e7020d7dd189a7e"},
-    {file = "pydantic-2.10.1.tar.gz", hash = "sha256:a4daca2dc0aa429555e0656d6bf94873a7dc5f54ee42b1f5873d666fb3f35560"},
+    {file = "pydantic-2.10.2-py3-none-any.whl", hash = "sha256:cfb96e45951117c3024e6b67b25cdc33a3cb7b2fa62e239f7af1378358a1d99e"},
+    {file = "pydantic-2.10.2.tar.gz", hash = "sha256:2bc2d7f17232e0841cbba4641e65ba1eb6fafb3a08de3a091ff3ce14a197c4fa"},
 ]
 
 [package.dependencies]
@@ -2201,13 +2248,13 @@ tests = ["hypothesis (>=3.27.0)", "pytest (>=3.2.1,!=3.3.0)"]
 
 [[package]]
 name = "pystac"
-version = "1.11.0"
+version = "1.10.1"
 description = "Python library for working with the SpatioTemporal Asset Catalog (STAC) specification"
 optional = false
-python-versions = ">=3.10"
+python-versions = ">=3.9"
 files = [
-    {file = "pystac-1.11.0-py3-none-any.whl", hash = "sha256:10ac7c7b4ea6c5ec8333829a09ec1a33b596f02d1a97ffbbd72cd1b6c10598c1"},
-    {file = "pystac-1.11.0.tar.gz", hash = "sha256:acb1e04be398a0cda2d8870ab5e90457783a8014a206590233171d8b2ae0d9e7"},
+    {file = "pystac-1.10.1-py3-none-any.whl", hash = "sha256:a7c31b3dacc44dfc955d9da8c7351c7b5b99100254b36301a1e312709b51bf2f"},
+    {file = "pystac-1.10.1.tar.gz", hash = "sha256:4617fe5315a79785f79b616b8ac248ba3d4d561457c8300b34573309715808cd"},
 ]
 
 [package.dependencies]
@@ -2215,20 +2262,23 @@ jsonschema = {version = ">=4.18,<5.0", optional = true, markers = "extra == \"va
 python-dateutil = ">=2.7.0"
 
 [package.extras]
+bench = ["asv (>=0.6.0,<0.7.0)", "packaging (>=24.0,<25.0)", "virtualenv (>=20.22,<21.0)"]
+docs = ["Sphinx (>=6.2,<7.0)", "boto3 (>=1.28,<2.0)", "ipython (>=8.12,<9.0)", "jinja2 (<4.0)", "jupyter (>=1.0,<2.0)", "nbsphinx (>=0.9.0,<0.10.0)", "pydata-sphinx-theme (>=0.13,<1.0)", "rasterio (>=1.3,<2.0)", "shapely (>=2.0,<3.0)", "sphinx-autobuild (==2024.2.4)", "sphinx-design (>=0.5.0,<0.6.0)", "sphinxcontrib-fulltoc (>=1.2,<2.0)"]
 jinja2 = ["jinja2 (<4.0)"]
 orjson = ["orjson (>=3.5)"]
+test = ["black (>=24.0,<25.0)", "codespell (>=2.2,<3.0)", "coverage (>=7.2,<8.0)", "doc8 (>=1.1,<2.0)", "html5lib (>=1.1,<2.0)", "jinja2 (<4.0)", "jsonschema (>=4.18,<5.0)", "mypy (>=1.2,<2.0)", "orjson (>=3.8,<4.0)", "pre-commit (>=3.2,<4.0)", "pytest (>=8.0,<9.0)", "pytest-cov (>=5.0,<6.0)", "pytest-mock (>=3.10,<4.0)", "pytest-recording (>=0.13.0,<0.14.0)", "requests-mock (>=1.11,<2.0)", "ruff (==0.3.4)", "types-html5lib (>=1.1,<2.0)", "types-jsonschema (>=4.18,<5.0)", "types-orjson (>=3.6,<4.0)", "types-python-dateutil (>=2.8,<3.0)", "types-urllib3 (>=1.26,<2.0)"]
 urllib3 = ["urllib3 (>=1.26)"]
 validation = ["jsonschema (>=4.18,<5.0)"]
 
 [[package]]
 name = "pystac-client"
-version = "0.8.5"
+version = "0.8.3"
 description = "Python library for working with SpatioTemporal Asset Catalog (STAC) APIs."
 optional = false
-python-versions = ">=3.10"
+python-versions = ">=3.9"
 files = [
-    {file = "pystac_client-0.8.5-py3-none-any.whl", hash = "sha256:0da63244e46dae45f66b6bd6e40eb94c03cb6e4850536ef3ebd58a7efeb48f69"},
-    {file = "pystac_client-0.8.5.tar.gz", hash = "sha256:7fba8d4f3c641ff7e840084fc3a53c96443a227f8a5889ae500fc38183ccd994"},
+    {file = "pystac_client-0.8.3-py3-none-any.whl", hash = "sha256:4b151f3ad993bd68d067b3fe525e4f49b05da3290f86fbc9b185e3f65ae1ebe5"},
+    {file = "pystac_client-0.8.3.tar.gz", hash = "sha256:0c47c1a1795f3c931a256fa1a512aa1a1eefa242fdf826dd456c78c8e97f4c5e"},
 ]
 
 [package.dependencies]
@@ -2237,8 +2287,8 @@ python-dateutil = ">=2.8.2"
 requests = ">=2.28.2"
 
 [package.extras]
-dev = ["black (>=24.0,<25.0)", "codespell (>=2.3.0,<2.4.0)", "coverage (>=7.2,<8.0)", "doc8 (>=1.1.1,<1.2.0)", "importlib-metadata (>=8.0,<9.0)", "mypy (>=1.2,<2.0)", "orjson (>=3.8,<4.0)", "pre-commit (>=4.0,<5.0)", "pytest (>=8.0,<9.0)", "pytest-benchmark (>=4.0.0,<4.1.0)", "pytest-console-scripts (>=1.4.0,<1.5.0)", "pytest-cov (>=5.0,<6.0)", "pytest-recording (>=0.13,<1.0)", "recommonmark (>=0.7.1,<0.8.0)", "requests-mock (>=1.12,<2.0)", "ruff (==0.7.0)", "tomli (>=2.0,<3.0)", "types-python-dateutil (>=2.8.19,<2.10.0)", "types-requests (>=2.32.0,<2.33.0)", "urllib3 (>=2.0,<3.0)"]
-docs = ["Sphinx (>=8.0,<9.0)", "boto3 (>=1.26,<2.0)", "cartopy (>=0.21,<1.0)", "geojson (>=3.1.0,<3.2.0)", "geopandas (>=1.0.0,<1.1.0)", "geoviews (>=1.9,<2.0)", "hvplot (>=0.11.0,<0.12.0)", "ipykernel (>=6.22,<7.0)", "ipython (>=8.12,<9.0)", "jinja2 (<4.0)", "matplotlib (>=3.8,<4.0)", "myst-parser (>=4.0,<5.0)", "nbsphinx (>=0.9,<1.0)", "pydata-sphinx-theme (>=0.13,<1.0)", "pygeoif (>=1.0,<2.0)", "scipy (>=1.10,<2.0)", "sphinxcontrib-fulltoc (>=1.2,<2.0)"]
+dev = ["black (>=24.0,<25.0)", "codespell (>=2.3.0,<2.4.0)", "coverage (>=7.2,<8.0)", "doc8 (>=1.1.1,<1.2.0)", "importlib-metadata (>=8.0,<9.0)", "mypy (>=1.2,<2.0)", "orjson (>=3.8,<4.0)", "pre-commit (>=3.2,<4.0)", "pytest (>=8.0,<9.0)", "pytest-benchmark (>=4.0.0,<4.1.0)", "pytest-console-scripts (>=1.4.0,<1.5.0)", "pytest-cov (>=5.0,<6.0)", "pytest-recording (>=0.13,<1.0)", "recommonmark (>=0.7.1,<0.8.0)", "requests-mock (>=1.12,<2.0)", "ruff (==0.5.4)", "tomli (>=2.0,<3.0)", "types-python-dateutil (>=2.8.19,<2.10.0)", "types-requests (>=2.31.0,<2.32.0)", "urllib3 (<2)"]
+docs = ["Sphinx (>=7.3,<8.0)", "boto3 (>=1.26,<2.0)", "cartopy (>=0.21,<1.0)", "geojson (>=3.1.0,<3.2.0)", "geopandas (>=1.0.0,<1.1.0)", "geoviews (>=1.9,<2.0)", "hvplot (>=0.10.0,<0.11.0)", "ipykernel (>=6.22,<7.0)", "ipython (>=8.12,<9.0)", "jinja2 (<4.0)", "matplotlib (>=3.8,<4.0)", "myst-parser (>=3.0,<4.0)", "nbsphinx (>=0.9,<1.0)", "pydata-sphinx-theme (>=0.13,<1.0)", "pygeoif (>=1.0,<2.0)", "scipy (>=1.10,<2.0)", "sphinxcontrib-fulltoc (>=1.2,<2.0)"]
 
 [[package]]
 name = "pytest"
@@ -2253,9 +2303,11 @@ files = [
 
 [package.dependencies]
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
+exceptiongroup = {version = ">=1.0.0rc8", markers = "python_version < \"3.11\""}
 iniconfig = "*"
 packaging = "*"
 pluggy = ">=1.5,<2"
+tomli = {version = ">=1", markers = "python_version < \"3.11\""}
 
 [package.extras]
 dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
@@ -2720,6 +2772,31 @@ postgresql = ["psycopg2-binary (==2.9.9)"]
 saml = ["python3-saml (==1.16.0)"]
 
 [[package]]
+name = "rucio-clients"
+version = "35.6.0"
+description = "Rucio Client Lite Package"
+optional = false
+python-versions = "<4,>=3.9"
+files = [
+    {file = "rucio_clients-35.6.0.tar.gz", hash = "sha256:3c77dea0ce95b7649211da08cee7e93fa9ecb1a6c91bbe750b76b4c576a8b0dd"},
+]
+
+[package.dependencies]
+dogpile-cache = ">=1.2.2"
+jsonschema = ">=4.20.0"
+requests = ">=2.32.2"
+tabulate = ">=0.9.0"
+urllib3 = ">=1.26.18"
+
+[package.extras]
+argcomplete = ["argcomplete (>=3.1.6)"]
+dumper = ["python-magic (>=0.4.27)"]
+kerberos = ["kerberos (>=1.3.1)", "pykerberos (>=1.2.4)", "requests-kerberos (>=0.14.0)"]
+sftp = ["paramiko (>=3.4.0)"]
+ssh = ["paramiko (>=3.4.0)"]
+swift = ["python-swiftclient (>=4.4.0)"]
+
+[[package]]
 name = "s3transfer"
 version = "0.10.4"
 description = "An Amazon S3 Transfer Manager"
@@ -2928,6 +3005,17 @@ files = [
 widechars = ["wcwidth"]
 
 [[package]]
+name = "tomli"
+version = "2.1.0"
+description = "A lil' TOML parser"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "tomli-2.1.0-py3-none-any.whl", hash = "sha256:a5c57c3d1c56f5ccdf89f6523458f60ef716e210fc47c4cfb188c5ba473e0391"},
+    {file = "tomli-2.1.0.tar.gz", hash = "sha256:3f646cae2aec94e17d04973e4249548320197cfabdf130015d023de4b74d8ab8"},
+]
+
+[[package]]
 name = "tornado"
 version = "6.4.2"
 description = "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed."
@@ -2991,13 +3079,13 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "virtualenv"
-version = "20.27.1"
+version = "20.28.0"
 description = "Virtual Python Environment builder"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "virtualenv-20.27.1-py3-none-any.whl", hash = "sha256:f11f1b8a29525562925f745563bfd48b189450f61fb34c4f9cc79dd5aa32a1f4"},
-    {file = "virtualenv-20.27.1.tar.gz", hash = "sha256:142c6be10212543b32c6c45d3d3893dff89112cc588b7d0879ae5a1ec03a47ba"},
+    {file = "virtualenv-20.28.0-py3-none-any.whl", hash = "sha256:23eae1b4516ecd610481eda647f3a7c09aea295055337331bb4e6892ecce47b0"},
+    {file = "virtualenv-20.28.0.tar.gz", hash = "sha256:2c9c3262bb8e7b87ea801d715fae4495e6032450c71d2309be9550e7364049aa"},
 ]
 
 [package.dependencies]
@@ -3149,7 +3237,26 @@ idna = ">=2.0"
 multidict = ">=4.0"
 propcache = ">=0.2.0"
 
+[[package]]
+name = "zipp"
+version = "3.21.0"
+description = "Backport of pathlib-compatible object wrapper for zip files"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "zipp-3.21.0-py3-none-any.whl", hash = "sha256:ac1bbe05fd2991f160ebce24ffbac5f6d11d83dc90891255885223d42b3cd931"},
+    {file = "zipp-3.21.0.tar.gz", hash = "sha256:2c9958f6430a2040341a52eb608ed6dd93ef4392e02ffe219417c1b28b5dd1f4"},
+]
+
+[package.extras]
+check = ["pytest-checkdocs (>=2.4)", "pytest-ruff (>=0.2.1)"]
+cover = ["pytest-cov"]
+doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-lint"]
+enabler = ["pytest-enabler (>=2.2)"]
+test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more-itertools", "pytest (>=6,!=8.1.*)", "pytest-ignore-flaky"]
+type = ["pytest-mypy"]
+
 [metadata]
 lock-version = "2.0"
-python-versions = ">=3.11,<3.13"
-content-hash = "e94565258e1e2f1f32bf27d85eb54abe7b93f584e89c3ed967ba8e18c063a5bc"
+python-versions = ">=3.9,<3.13"
+content-hash = "d76898c29f283f0ad32f1d78e54adcf1d1b3b017ea1628a29be1dbb58f5530f9"

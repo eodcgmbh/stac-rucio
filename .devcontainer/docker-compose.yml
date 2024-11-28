@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  workspace:
+    container_name: stac-rucio-devcontainer
+    build:
+      context: ..
+      dockerfile: "Dockerfile"
+      target: base
+    volumes:
+      - ../:/stac-rucio
+      - /opt/rucio/etc/rucio.cfg:/opt/rucio/etc/rucio.cfg
+    tty: true
