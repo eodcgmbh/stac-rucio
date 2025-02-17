@@ -29,7 +29,7 @@ class StacClient:
 
         replicas = [ 
             rep for rep in self.rucio.list_replicas(
-                dids=[{"scope": config.scope, "name": config.name}],
+                dids=[{"scope": self.rucio.self.rucio.account, "name": config.name}],
                 schemes=[
                     config.scheme,
                 ],
@@ -72,7 +72,7 @@ class StacClient:
             if not replicas:
                 self.rucio.add_replica(
                     rse=src_rse,
-                    scope=config.scope,
+                    scope=self.rucio.account,
                     name=config.name,
                     pfn=self._ensure_port(tmp["assets"][self.target]["href"]),
                     bytes_=config.size,
@@ -94,7 +94,7 @@ class StacClient:
 
             if not replicas:
                 self.rucio.add_replication_rule(
-                    dids=[{"scope": config.scope, "name": config.name}],
+                    dids=[{"scope": self.rucio.account, "name": config.name}],
                     copies=1,
                     rse_expression=dst_rse
                 )
@@ -128,7 +128,7 @@ class StacClient:
         self.downloader.download_dids(
             items=[
                 {
-                    "did": f"{config.scope}:{config.name}",
+                    "did": f"{self.rucio.account}:{config.name}",
                     "rse": rse,
                     "pfn": item.assets[rse].href,
                 }
