@@ -23,6 +23,7 @@ class StacClient:
 
         return urlunparse(res._replace(netloc=new_netloc))
 
+    # TODO This should check is replication rules exist for this item and rse. Found using filters in list_replication_rules somewhat difficult.
     def _get_existing_replicas(self, item: dict, rse: str = None):
         
         config = RucioStac(**item['assets'][self.target]["rucio:config"])
@@ -49,7 +50,7 @@ class StacClient:
 
         for item in items["features"]:
 
-            replicas = self._get_existing_replicas(item, self.target)
+            replicas = self._get_existing_replicas(item)
 
             for replica in replicas:
                 for key, value in replica["rses"].items():
@@ -88,7 +89,7 @@ class StacClient:
             tmp = item.to_dict()
             config = RucioStac(**tmp["assets"][self.target]["rucio:config"])
 
-            replicas = self._get_existing_replicas(tmp, self.target, src_rse)
+            replicas = self._get_existing_replicas(tmp, dst_rse)
 
             if not replicas:
                 self.rucio.add_replication_rule(
