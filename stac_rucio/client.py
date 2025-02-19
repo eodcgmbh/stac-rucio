@@ -29,7 +29,7 @@ class StacClient:
 
         replicas = [ 
             rep for rep in self.rucio.list_replicas(
-                dids=[{"scope": self.rucio.self.rucio.account, "name": config.name}],
+                dids=[{"scope": self.rucio.account, "name": config.name}],
                 schemes=[
                     config.scheme,
                 ],
@@ -54,9 +54,7 @@ class StacClient:
             for replica in replicas:
                 for key, value in replica["rses"].items():
                     # TODO For multiple targets, link asset to original asset.
-                    item["assets"][key] = Asset(
-                        href=value[0], title=f"Rucio Storage Element: {key}"
-                    ).to_dict()
+                    item["assets"][target]["alternate"][key] = value[0]
 
     def create_replicas(self, items: list, src_rse: str):
         """Create replicas for stac items if they do not already exist at a non-deterministic RSE."""
@@ -130,7 +128,7 @@ class StacClient:
                 {
                     "did": f"{self.rucio.account}:{config.name}",
                     "rse": rse,
-                    "pfn": item.assets[rse].href,
+                    "pfn": item.assets[self.target]["alternate"][rse],
                 }
             ]
         )
