@@ -10,8 +10,8 @@ readme = "README.md"
 python = ">=3.9,<3.13"
 pystac = ">=1.10.0 "
 pystac-client = ">=0.8.3"
-rucio = ">=35.6.0"
-rucio_clients = ">=35.6.0"
+rucio = ">=36.3.0"
+rucio_clients = ">=36.3.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"

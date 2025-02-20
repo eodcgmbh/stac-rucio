@@ -11,7 +11,6 @@ class ReplicaExists(Exception):
 class StacClient:
     def __init__(self, target):
         self.rucio = Client()
-        self.rucio.whoami()
         self.downloader = DownloadClient()
         self.scheme = "https"
 
@@ -32,11 +31,11 @@ class StacClient:
             tmp = item.to_dict()
             config = RucioStac(**tmp["assets"][target]["rucio:config"])
 
-            replicas = self.get_existing_replicas(tmp, src_rse)
+            replicas = self.get_existing_replicas(tmp, rse)
 
             if not replicas:
                 self.rucio.add_replica(
-                    rse=src_rse,
+                    rse=rse,
                     scope=self.rucio.account,
                     name=item["id"],
                     pfn=self._ensure_port(tmp["assets"][target]["href"]),
@@ -46,7 +45,7 @@ class StacClient:
 
         return True
 
-    def create_replication_rules(self, items: list, src_rse: str, dst_rse: str):
+    def create_replication_rules(self, items: list, dst_rse: str):
         """Create replication rules for stac items existing as a non-deterministic RSE to replication to a different rse location."""
         
         for item in items:
@@ -66,7 +65,7 @@ class StacClient:
 
     def delete_replication_rules(self, items: list, rse: str, state: str = None):
         
-        rules = self.get_item_replication_rules(items, rse, state)
+        rules = self.get_items_replication_rules(items, rse, state)
 
         for rule in rules:
             self.rucio.delete_replication_rule(rule["id"])
@@ -88,22 +87,13 @@ class StacClient:
 
     def download_available(self, items: list, rse: str):
 
-        available_names = self.get_available_names(items, rse)
+        available_names = self.get_items_replication_rules(items, rse, "OK")
         available_items = [ item for item in items if item.id in available_names ] 
 
         for item in available_items:
             self.download(item, rse)
 
         return True
-
-    def get_available_names(self, items: list, rse: str):
-
-        item_ids = [ item.id for item in items ]
-        rules = [ 
-            rule["name"] for rule in self.rucio.list_replication_rules(filters={"scope":self.rucio.account}) if rule["name"] in item_ids and rule["state"] == "OK"
-        ]
-
-        return rules
 
     # TODO This should check is replication rules exist for this item and rse. Found using filters in list_replication_rules somewhat difficult.
     def get_existing_replicas(self, item: dict, rse: str = None):
@@ -125,12 +115,12 @@ class StacClient:
 
         return replicas
 
-    def get_item_replication_rules(self, items: list, rse: str, state: str = None):
+    def get_items_replication_rules(self, items: list, rse: str, state: str = None):
         """Determine existing replication rules for a given item and state, if provided. """
 
         item_ids = [ item.id for item in items ]
         rules = [ 
-            x for x in self.rucio.list_replication_rules(filters={ "scope" : self.rucio.account })
+            x for x in self.rucio.list_replication_rules(filters={ "scope" : self.rucio.account, "rse_expression": rse })
             if x["name"] in item_ids and ( state is None or x["state"] == state )
         ]
 
@@ -139,9 +129,7 @@ class StacClient:
     def replication_availability(self, items: list, rse: str):
         """Determine the number of available replications based off the replication rule state. """
 
-        item_ids = [ item.id for item in items ]
-
-        rules = [ x for x in self.rucio.list_replication_rules(filters={"scope":self.rucio.account}) if x["name"] in item_ids ]
+        rules = self.get_items_replication_rules(items, rse)
 
         available = [ rule for rule in rules if rule["state"] == "OK"]
         stuck = [ rule for rule in rules if rule["state"] == "STUCK"]
@@ -166,5 +154,6 @@ class StacClient:
                     # TODO For multiple targets, link asset to original asset.
                     if not "alternate" in item["assets"][self.target]:
                         item["assets"][self.target]["alternate"] = {}
+
                     item["assets"][self.target]["alternate"][key] = value[0]
 
