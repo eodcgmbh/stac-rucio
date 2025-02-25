@@ -7,11 +7,12 @@ license = "Apache License 2.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.13"
+python = ">3.9.1,<3.13"
 pystac = ">=1.10.0 "
 pystac-client = ">=0.8.3"
 rucio = ">=36.3.0"
 rucio_clients = ">=36.3.0"
+cryptography = ">=44.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"
