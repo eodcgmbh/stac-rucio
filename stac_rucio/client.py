@@ -9,7 +9,7 @@ class ReplicaExists(Exception):
     pass
 
 class StacClient:
-    def __init__(self, target):
+    def __init__(self):
         self.rucio = Client()
         self.downloader = DownloadClient()
         self.scheme = "https"
@@ -21,45 +21,47 @@ class StacClient:
 
         return urlunparse(res._replace(netloc=new_netloc))
 
-    def create_replicas(self, items: list, rse: str, target: str ):
+    def create_replicas(self, items: list, rse: str, targets: list[str] ):
         """Create replicas for stac items if they do not already exist at a non-deterministic RSE."""
         
         for item in items:
             # TODO Put this into it's own function and add exception handling for existing replicas.
-            # TODO Should handle a list of targets
             
-            tmp = item.to_dict()
-            config = RucioStac(**tmp["assets"][target]["rucio:config"])
+            for target in targets:
 
-            replicas = self.get_existing_replicas(tmp, rse)
+                tmp = item.to_dict()
+                config = RucioStac(**tmp["assets"][target]["rucio:config"])
 
-            if not replicas:
-                self.rucio.add_replica(
-                    rse=rse,
-                    scope=self.rucio.account,
-                    name=item["id"],
-                    pfn=self._ensure_port(tmp["assets"][target]["href"]),
-                    bytes_=config.size,
-                    adler32=config.adler32
-                )
+                replicas = self.get_existing_replicas(tmp, rse)
+
+                if not replicas:
+                    self.rucio.add_replica(
+                        rse=rse,
+                        scope=self.rucio.account,
+                        name=self.get_rucio_name(tmp, target),
+                        pfn=self._ensure_port(tmp["assets"][target]["href"]),
+                        bytes_=config.size,
+                        adler32=config.adler32
+                    )
 
         return True
 
-    def create_replication_rules(self, items: list, dst_rse: str):
+    def create_replication_rules(self, items: list, dst_rse: str, targets: list[str]):
         """Create replication rules for stac items existing as a non-deterministic RSE to replication to a different rse location."""
         
         for item in items:
-            # TODO Put this into it's own function and add exception handling for existing replication rules.
 
-            tmp = item.to_dict()
-            replicas = self.get_existing_replicas(tmp, dst_rse)
+            for target in targets:
 
-            if not replicas:
-                self.rucio.add_replication_rule(
-                    dids=[{"scope": self.rucio.account, "name": tmp["id"] }],
-                    copies=1,
-                    rse_expression=dst_rse
-                )
+                tmp = item.to_dict()
+                replicas = self.get_existing_replicas(tmp, dst_rse)
+
+                if not replicas:
+                    self.rucio.add_replication_rule(
+                        dids=[{"scope": self.rucio.account, "name": self.get_rucio_name(tmp, target) }],
+                        copies=1,
+                        rse_expression=dst_rse
+                    )
 
         return True
 
@@ -72,15 +74,16 @@ class StacClient:
 
         return True
 
-    def download(self, item, rse):
+    def download(self, item, target, rse):
         """Download from a specic RSE."""
+
 
         self.downloader.download_dids(
             items=[
                 {
-                    "did": f"{self.rucio.account}:{item.id}",
+                    "did": f"{self.rucio.account}:{self.get_rucio_name(item, target)}",
                     "rse": rse,
-                    "pfn": item.to_dict()['assets'][self.target]["alternate"][rse],
+                    "pfn": item.to_dict()['assets'][target]["alternate"][rse],
                 }
             ]
         )
@@ -96,11 +99,11 @@ class StacClient:
         return True
 
     # TODO This should check is replication rules exist for this item and rse. Found using filters in list_replication_rules somewhat difficult.
-    def get_existing_replicas(self, item: dict, rse: str = None):
+    def get_existing_replicas(self, item: dict, target: str, rse: str = None):
         
         replicas = [ 
             rep for rep in self.rucio.list_replicas(
-                dids=[{"scope": self.rucio.account, "name": item["id"] }],
+                dids=[{"scope": self.rucio.account, "name":  self.get_rucio_name(item, target)}],
                 schemes=[
                     self.scheme,
                 ],
@@ -118,13 +121,24 @@ class StacClient:
     def get_items_replication_rules(self, items: list, rse: str, state: str = None):
         """Determine existing replication rules for a given item and state, if provided. """
 
-        item_ids = [ item.id for item in items ]
+        possible_rucio_names = [ 
+            self.get_rucio_name(item.to_dict(), key)
+            for item in items
+            for key, asset in item.assets.items()
+            if "rucio:config" in asset.extra_fields
+        ]
+          
         rules = [ 
             x for x in self.rucio.list_replication_rules(filters={ "scope" : self.rucio.account, "rse_expression": rse })
-            if x["name"] in item_ids and ( state is None or x["state"] == state )
+            if x["name"] in possible_rucio_names and ( state is None or x["state"] == state )
         ]
 
         return rules
+    
+    def get_rucio_name(self, item, target):
+        """ """
+
+        return "{item_id}_{target}".format(item_id=item["id"], target=target)
 
     def replication_availability(self, items: list, rse: str):
         """Determine the number of available replications based off the replication rule state. """
@@ -147,13 +161,17 @@ class StacClient:
 
         for item in items["features"]:
 
-            replicas = self.get_existing_replicas(item)
+            for asset_key, asset in item["assets"].items():
 
-            for replica in replicas:
-                for key, value in replica["rses"].items():
-                    # TODO For multiple targets, link asset to original asset.
-                    if not "alternate" in item["assets"][self.target]:
-                        item["assets"][self.target]["alternate"] = {}
+                if "rucio:config" in asset:
 
-                    item["assets"][self.target]["alternate"][key] = value[0]
+                    replicas = self.get_existing_replicas(item=item, target=asset_key)
+
+                    for replica in replicas:
+                        for key, value in replica["rses"].items():
+                            # TODO For multiple targets, link asset to original asset.
+                            if not "alternate" in item["assets"][asset_key]:
+                                item["assets"][asset_key]["alternate"] = {}
+
+                            item["assets"][asset_key]["alternate"][key] = value[0]
 
